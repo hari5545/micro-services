@@ -1,0 +1,41 @@
+# application name
+spring:
+  application:
+    name: eureka-server
+
+server:
+  port: 8761
+  
+# eureka config
+
+eureka:
+  instance:
+  
+    # hostname name
+    hostname: localhost
+  client:
+  
+    # This determines if this server registers itself as a client; as I said earlier, the Eureka server is also acting as a client so that it can sync the registry. The value being false means it prevents itself from acting as a client.
+    register-with-eureka: false
+    registry-fetch-interval-seconds: 5000
+    
+    # Does not register itself in the service registry.
+    fetch-registry: false
+    
+    # application is working fine or not
+    healthcheck:
+      enabled: true
+      
+    # eureka service url
+    service-url:
+      defaultZone : http://${eureka.instance.hostname}:${server.port}/eureka/
+    
+    # eureka server port
+    eureka-server-port: 8761
+         
+logging:
+  level:
+    com:
+      netflix :
+        eureka: OFF
+        discovery: INFO
