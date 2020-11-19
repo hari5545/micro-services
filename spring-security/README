@@ -1,0 +1,151 @@
+1) Default Security Setup
+   ----------------------
+by default, the Authentication gets enabled for the Application. Also, content negotiation is used to determine if basic or formLogin should be used.
+
+There are some predefined properties, such as:
+
+	spring.security.user.name
+	spring.security.user.password
+
+If we don't configure the password using the predefined property spring.security.user.password and start the application, we'll notice that a default password is randomly generated and printed in the console log:
+
+	Using default security password: c8be15de-4488-4490-9dc6-fab3f91435c6
+	
+2) Disabling the Auto-Configuration
+   --------------------------------
+   To discard the security auto-configuration and add our own configuration, we need to exclude the SecurityAutoConfiguration class.
+
+This can be done via a simple exclusion:
+
+	@SpringBootApplication(exclude = { SecurityAutoConfiguration.class })
+	public class SpringBootSecurityApplication {
+	 
+	    public static void main(String[] args) {
+	        SpringApplication.run(SpringBootSecurityApplication.class, args);
+	    }
+	}
+
+Or by adding some configuration into the application.properties file:
+
+	spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration
+	There are also some particular cases in which this setup isn't quite enough.
+
+For example, almost each Spring Boot application is started with Actuator in the classpath. This causes problems because another auto-configuration class needs the one we've just excluded, so the application will fail to start.
+
+In order to fix this issue, we need to exclude that class; and, specific to the Actuator situation, we need to exclude ManagementWebSecurityAutoConfiguration.
+																													   --------------------------------------
+3) Web Security Expressions
+---------------------------
+Now, let's start looking at the security expressions:
+
+    hasRole, hasAnyRole
+    hasAuthority, hasAnyAuthority
+    permitAll, denyAll
+    isAnonymous, isRememberMe, isAuthenticated, isFullyAuthenticated
+    principal, authentication
+    hasPermission
+
+4) add JWT dependency
+5) Generate JWT token using Jwts cliams
+6) validate token inside filter 
+7) get username from filter 
+8) check weather weather user is valid or not
+
+What is JSON Web Token?
+-----------------------
+	JSON Web Token (JWT) is an open standard (RFC 7519) that defines a compact and self-contained way for securely transmitting
+ information between parties as a JSON object. This information can be verified and trusted because it is digitally signed.
+ JWTs can be signed using a secret (with the HMAC algorithm) or a public/private key pair using RSA or ECDSA.
+ 
+ What is the JSON Web Token structure?
+-------------------------------------
+In its compact form, JSON Web Tokens consist of three parts separated by dots (.), which are:
+
+    1) Header
+    2) Payload
+    3) Signature
+
+Therefore, a JWT typically looks like the following.
+
+xxxxx.yyyyy.zzzzz
+
+Header
+------
+The header typically consists of two parts: the type of the token, which is JWT, and the signing algorithm being used, such as HMAC SHA256 or RSA.
+
+For example:
+
+{
+  "alg": "HS256",
+  "typ": "JWT"
+}
+
+Payload
+-------
+which contains the claims. Claims are statements about an entity (typically, the user) and additional data. There are three types of claims: registered, public, and private claims.
+
+    Registered claims: These are a set of predefined claims which are not mandatory but recommended, to provide a set of useful, interoperable claims. Some of them are: iss (issuer), exp (expiration time), sub (subject), aud (audience), and others.
+
+        Notice that the claim names are only three characters long as JWT is meant to be compact.
+
+    Public claims: These can be defined at will by those using JWTs. But to avoid collisions they should be defined in the IANA JSON Web Token Registry or be defined as a URI that contains a collision resistant namespace.
+
+    Private claims: These are the custom claims created to share information between parties that agree on using them and are neither registered or public claims.
+
+An example payload could be:
+
+{
+  "sub": "1234567890",
+  "name": "John Doe",
+  "admin": true
+}
+
+
+Signature
+---------
+To create the signature part you have to take the encoded header, the encoded payload, a secret, the algorithm specified in the header, and sign that.
+
+For example if you want to use the HMAC SHA256 algorithm, the signature will be created in the following way:
+
+HMACSHA256(
+  base64UrlEncode(header) + "." +
+  base64UrlEncode(payload),
+  secret)
+  
+  ENDPOINTS
+  ---------
+  
+ 1) signUp url : http://localhost:9090/api/auth/signUp
+ 
+ method : POST
+ request: 
+  {
+	
+      "userName":"priya",
+
+      "email":"",
+ 
+      "password":"priya",
+
+      "phoneNumber":""
+      
+}
+ reponse :
+     user created sucessfully.
+2) login url : http://localhost:9090/api/auth/login
+   
+   Method : GET
+   response:{
+    
+             "userName": "priya",
+ 
+             "jwtToken":"gmxxNvqHprCitPx6wYUuKveyAPCEjVvuiyfAQLoq8k7lY9GGuMZlHI_zl3lKhREC
+                         pT1CORruC8kakH6einByWzgPMoSRh4w"
+
+            }
+3) get resources url http://localhost:9090/api/test/get along with token 
+ 
+application.properties file refernces
+-------------------------------------
+https://docs.spring.io/spring-boot/docs/current/reference/html/appendix-application-properties.html
+https://jwt.io/introduction/
