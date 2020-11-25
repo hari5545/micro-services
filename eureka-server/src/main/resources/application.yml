@@ -10,7 +10,7 @@ server:
 
 eureka:
   instance:
-  
+    prefer-ip-address: true
     # hostname name
     hostname: localhost
   client:
@@ -21,7 +21,7 @@ eureka:
     
     # Does not register itself in the service registry.
     fetch-registry: false
-    
+        
     # application is working fine or not
     healthcheck:
       enabled: true
