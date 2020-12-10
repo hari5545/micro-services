@@ -54,7 +54,4 @@ public class User implements Serializable{
 	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER,orphanRemoval = true)
 	@JoinColumn(name = "user_id")
     protected Set<UserRoles> userRoles;
-   
-	
-	
 }

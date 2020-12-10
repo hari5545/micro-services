@@ -1,0 +1,34 @@
+What is OAuth
+-------------
+OAuth is simply a secure authorization protocol that deals with the authorization of third party application to access the user data without exposing their password.
+ eg. (Login with fb, gPlus, twitter in many websites..) all work under this protocol.
+ 
+OAuth2 Roles
+------------
+OAuth2 provides 4 different roles. 
+
+1) Resource Owner: User
+
+2) Client: Application
+
+3) Resource Server: API
+
+4) Authorization Server: API
+
+OAuth2 Grant Types
+------------------
+
+Following are the 4 different grant types defined by OAuth2
+
+1) Authorization Code: used with server-side Applications
+
+2) Implicit: used with Mobile Apps or Web Applications (applications that run on the user's device)
+
+3) Resource Owner Password Credentials: used with trusted Applications, such as those owned by the service itself
+
+4) Client Credentials: used with Applications API access
+
+
+References :
+----------
+https://www.xoriant.com/blog/product-engineering/microservices-security-using-jwt-authentication-gateway.html
