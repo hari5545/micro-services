@@ -1,0 +1,57 @@
+API Gateway :
+-----------
+    This is a service that provides a single-entry point for certain groups of microservices.  
+
+Functionalities of API Gateway:
+------------------------------
+     1) Authentication and authorization
+     2) Load balancing
+     3) Logging, tracing
+     4) caching
+     5) Routing
+
+what is Spring Cloud Gateway?
+-----------------------------
+	Spring Cloud Gateway is API Gateway implementation by Spring Cloud team on top of Spring reactive ecosystem.
+  It provides a simple and effective way to route incoming requests to the appropriate destination using Gateway Handler Mapping.
+ And Spring Cloud Gateway uses Netty server to provide non-blocking asynchronous request processing.
+
+Spring Cloud Gateway consists of 3 main building blocks:
+
+Route: Think of this as the destination that we want a particular request to route to. It comprises of destination URI, a condition that has to satisfy — 
+------     Or in terms of technical terms, Predicates, and one or more filters.
+
+Predicate: This is literally a condition to match. i.e. kind of “if” condition..if requests has something — 
+---------      e.g. path=blah or request header contains foo-bar etc. In technical terms, it is Java 8 Function Predicate
+
+Filter: These are instances of Spring Framework WebFilter. This is where you can apply your magic of modifying request or response.
+------  There are quite a lot of out of box WebFilter that framework provides. But of course, we are talking about Spring Framework. 
+          So, rest easy folks!!! You can always add your own filter with your own logic :)
+
+Ex:
+   spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+      - id: employee-service
+        uri: lb://employee-service
+        predicates:
+        - Path=/employee/**
+        filters:
+        - RewritePath=/employee/(?.*), /$\{path}
+      - id: department-service
+        uri: lb://department-service
+        predicates:
+        - Path=/department/**
+        filters:
+        - RewritePath=/department/(?.*), /$\{path}
+      - id: organization-service
+        uri: lb://organization-service
+        predicates:
+        - Path=/organization/**
+        filters:
+        - RewritePath=/organization/(?.*), /$\{path}
+

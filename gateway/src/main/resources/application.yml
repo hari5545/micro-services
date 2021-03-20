@@ -1,0 +1,45 @@
+server:
+  port: 8085
+  
+spring:
+  application:
+    name: gate-way
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+      - id: order-service
+        uri: lb://ORDER-SERVICE
+        predicates:
+        - Path=/api/order/**
+        - Header=Authorization, Bearer [0-9a-zA-Z-.]*  
+      - id: payment-service
+        uri: lb://PAYMENT-SERVICE
+        predicates:
+        - Path=/api/payment/** 
+        - Header=Authorization, Bearer [0-9a-zA-Z-.]* 
+      - id: auth-service
+        uri: lb://AUTH-SERVICE
+        predicates:
+        - Path= /oauth/**
+
+# we can access the url: “http://localhost:8085/actuator/gateway/routes” to check all routing configuration created
+
+management:
+    endpoints:
+      web:
+        exposure:
+          include: "*"      
+
+
+eureka:
+  client:
+   register-with-eureka: true
+   fetch-registry: true
+   service-url:
+     defaultZone : http://localhost:8761/eureka
+  instance:
+    hostname: localhost 
+   
